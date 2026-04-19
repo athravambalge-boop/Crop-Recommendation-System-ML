@@ -130,6 +130,9 @@ POST /api/predict
 - Add automated tests and CI workflow
 - Deploy to cloud (Render/Azure/AWS) with monitoring
 
+## Author
+ATHARVA PRASHANT AMBALGE
+
 ## License
 
 Educational and portfolio use.
