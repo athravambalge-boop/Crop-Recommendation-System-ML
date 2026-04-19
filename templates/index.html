@@ -22,43 +22,57 @@
 <header>
 <h1><i class="fa-solid fa-seedling"></i> Crop Recommendation System</h1>
 <p>Enter soil and climate conditions to get the best crop recommendation.</p>
+<p class="subtext">Portfolio Mode: includes confidence insights and top-3 crop alternatives.</p>
 </header>
+
+{% if error_message %}
+<div class="error-banner">
+	<i class="fa-solid fa-circle-exclamation"></i>
+	{{ error_message }}
+</div>
+{% endif %}
+
+<div class="preset-row">
+	<button type="button" class="preset-btn" data-preset="balanced">Balanced Soil</button>
+	<button type="button" class="preset-btn" data-preset="humid">Humid Tropical</button>
+	<button type="button" class="preset-btn" data-preset="dry">Dry Climate</button>
+</div>
 
 <form action="/predict" method="POST" class="recommendation-form">
 
 <div class="form-group">
 <label><i class="fa-solid fa-flask"></i> Nitrogen</label>
-<input type="number" step="any" name="nitrogen" required>
+<input type="number" step="any" name="nitrogen" min="0" max="200" placeholder="0 to 200" required>
 </div>
 
 <div class="form-group">
 <label><i class="fa-solid fa-flask"></i> Phosphorus</label>
-<input type="number" step="any" name="phosphorus" required>
+<input type="number" step="any" name="phosphorus" min="0" max="150" placeholder="0 to 150" required>
 </div>
 
 <div class="form-group">
 <label><i class="fa-solid fa-flask"></i> Potassium</label>
-<input type="number" step="any" name="potassium" required>
+<input type="number" step="any" name="potassium" min="0" max="250" placeholder="0 to 250" required>
 </div>
 
 <div class="form-group">
 <label><i class="fa-solid fa-temperature-high"></i> Temperature (°C)</label>
-<input type="number" step="any" name="temperature" required>
+<input type="number" step="any" name="temperature" min="-10" max="60" placeholder="-10 to 60" required>
 </div>
 
 <div class="form-group">
 <label><i class="fa-solid fa-droplet"></i> Humidity (%)</label>
-<input type="number" step="any" name="humidity" required>
+<input type="number" step="any" name="humidity" min="0" max="100" placeholder="0 to 100" required>
 </div>
 
 <div class="form-group">
 <label><i class="fa-solid fa-vial"></i> pH Level</label>
-<input type="number" step="any" name="ph" required>
+<input type="number" step="any" name="ph" min="0" max="14" placeholder="0 to 14" required>
 </div>
 
 <div class="form-group">
 <label><i class="fa-solid fa-cloud-rain"></i> Rainfall (mm)</label>
-<input type="number" step="any" name="rainfall" required>
+<input type="number" step="any" name="rainfall" min="0" max="2000" placeholder="0 to 2000" required>
 </div>
 
 <button type="submit" class="btn-submit">
@@ -79,6 +93,37 @@ Recommended Crop
 <p class="prediction-text">
 {{ prediction_text.capitalize() }}
 </p>
+
+{% if confidence is not none %}
+<p class="confidence-pill">Model confidence: {{ confidence }}%</p>
+{% endif %}
+
+{% if soil_summary %}
+<div class="insight-grid">
+	<div class="insight-card">
+		<h3>Soil Fertility</h3>
+		<p>{{ soil_summary.fertility }}</p>
+	</div>
+	<div class="insight-card">
+		<h3>pH Profile</h3>
+		<p>{{ soil_summary.ph_status }}</p>
+	</div>
+</div>
+{% endif %}
+
+{% if top_recommendations %}
+<div class="top-recommendations">
+	<h3>Top 3 Recommendations</h3>
+	<div class="top-grid">
+	{% for item in top_recommendations %}
+		<div class="top-card">
+			<p class="crop-name">{{ item.crop.capitalize() }}</p>
+			<p class="crop-confidence">{{ item.confidence }}%</p>
+		</div>
+	{% endfor %}
+	</div>
+</div>
+{% endif %}
 
 {% if crop_image %}
 <div class="prediction-image">
@@ -106,6 +151,8 @@ Learn More About This Crop
 </div>
 
 </div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
 
 </body>
 </html>

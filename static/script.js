@@ -4,6 +4,41 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add loading animation to form submission
     const form = document.querySelector('.recommendation-form');
     const submitBtn = document.querySelector('.btn-submit');
+    const presetButtons = document.querySelectorAll('.preset-btn');
+
+    const presets = {
+        balanced: {
+            nitrogen: 80,
+            phosphorus: 45,
+            potassium: 40,
+            temperature: 26,
+            humidity: 62,
+            ph: 6.6,
+            rainfall: 180
+        },
+        humid: {
+            nitrogen: 95,
+            phosphorus: 40,
+            potassium: 45,
+            temperature: 28,
+            humidity: 82,
+            ph: 6.1,
+            rainfall: 240
+        },
+        dry: {
+            nitrogen: 55,
+            phosphorus: 32,
+            potassium: 35,
+            temperature: 31,
+            humidity: 42,
+            ph: 7.2,
+            rainfall: 80
+        }
+    };
+
+    if (!form || !submitBtn) {
+        return;
+    }
     
     form.addEventListener('submit', function(e) {
         // Add loading state
@@ -13,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Re-enable after a short delay (in case of client-side validation)
         setTimeout(() => {
             submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="fas fa-magic"></i> Recommend Crop';
+            submitBtn.innerHTML = '<i class="fa-solid fa-leaf"></i> Recommend Crop';
         }, 2000);
     });
     
@@ -39,6 +74,24 @@ document.addEventListener('DOMContentLoaded', function() {
     if (predictionResult) {
         predictionResult.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
+
+    presetButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const key = this.dataset.preset;
+            const preset = presets[key];
+            if (!preset) {
+                return;
+            }
+
+            Object.keys(preset).forEach(name => {
+                const input = form.querySelector(`input[name="${name}"]`);
+                if (input) {
+                    input.value = preset[name];
+                    validateInput(input);
+                }
+            });
+        });
+    });
     
     // Add particle effect on button hover
     submitBtn.addEventListener('mouseenter', createParticles);

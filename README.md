@@ -1,17 +1,29 @@
-# Crop Recommendation System
+# Crop Recommendation System (Internship Portfolio Edition)
 
-This project is a machine learning powered Flask web application that recommends the most suitable crop based on soil and weather conditions.
+A machine learning powered Flask application that recommends suitable crops using soil nutrients and weather inputs.
+
+This edition is improved to demonstrate software engineering quality expected from an AI/ML internship candidate: model inference, validation, API design, explainability output, and polished frontend UX.
+
+## Why This Project Is Internship-Ready
+
+- End-to-end ML deployment using Flask and a serialized model
+- Strict backend input validation with meaningful user errors
+- Explainability-oriented output with:
+  - model confidence
+  - top-3 alternative crops
+  - soil fertility and pH summary
+- API endpoint for integration and testing workflows
+- Modern responsive interface with quick preset scenarios
 
 ## Features
 
-- Predicts a crop using soil nutrients and climate inputs
-- Displays crop image for the predicted crop
-- Provides a quick Wikipedia reference link for more information
-- Simple web interface for entering agricultural parameters
+- Crop prediction from 7 agronomic features
+- Image and Wikipedia link for predicted crop
+- Confidence score and top-3 recommendations (when supported by model)
+- Soil health summary for better decision support
+- Web endpoint and JSON API endpoint
 
 ## Input Parameters
-
-The model uses the following values:
 
 - Nitrogen (N)
 - Phosphorus (P)
@@ -27,6 +39,7 @@ The model uses the following values:
 - Flask
 - NumPy
 - Scikit-learn
+- HTML/CSS/JavaScript
 
 ## Project Structure
 
@@ -45,12 +58,7 @@ The model uses the following values:
 `-- README.md
 ```
 
-## Installation
-
-1. Clone or download the project.
-2. Open the project folder.
-3. Create a virtual environment.
-4. Install dependencies.
+## Setup
 
 ### Windows (PowerShell)
 
@@ -68,23 +76,60 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## Run the App
+## Run
 
 ```bash
 python app.py
 ```
 
-Then open:
+Open: http://127.0.0.1:5000
 
-```text
-http://127.0.0.1:5000
+## API Usage
+
+### Endpoint
+
+POST /api/predict
+
+### Sample Request
+
+```json
+{
+  "nitrogen": 80,
+  "phosphorus": 45,
+  "potassium": 40,
+  "temperature": 26,
+  "humidity": 62,
+  "ph": 6.6,
+  "rainfall": 180
+}
 ```
 
-## Notes
+### Sample Response
 
-- The trained model file must be present at `model/crop_model.pkl`.
-- Crop images are served from `static/crops/`.
+```json
+{
+  "recommended_crop": "rice",
+  "confidence": 88.31,
+  "top_recommendations": [
+    {"crop": "rice", "confidence": 88.31},
+    {"crop": "maize", "confidence": 7.88},
+    {"crop": "jute", "confidence": 2.66}
+  ],
+  "wikipedia": "https://en.wikipedia.org/wiki/Rice",
+  "soil_summary": {
+    "fertility": "Moderate fertility",
+    "ph_status": "Near-neutral"
+  }
+}
+```
+
+## Future Enhancements
+
+- Add model evaluation metrics dashboard
+- Add experiment tracking (MLflow/W&B)
+- Add automated tests and CI workflow
+- Deploy to cloud (Render/Azure/AWS) with monitoring
 
 ## License
 
-This project is for educational and learning purposes.
+Educational and portfolio use.
